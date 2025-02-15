@@ -47,17 +47,26 @@ export class PreOrdersController {
     console.log('pre-order was put to DB');
 
     if (result) {
-      console.log('sending email to', result.user_email);
-      this.emailsService.sendPreOrderCreatedEmail({
-        to: result.user_email,
-        customerName: result.user_full_name,
-      });
+      try {
+        console.log('sending email to', result.user_email);
+        await this.emailsService.sendPreOrderCreatedEmail({
+          to: result.user_email,
+          customerName: result.user_full_name,
+        });
+      } catch (error) {
+        console.error('Error while sending email', error);
+      }
 
       const product = result.product as unknown as ProductsEntity;
 
-      this.telegramService.sendMessage(
-        `You got a new pre-order! From ${result.user_full_name} (${result.user_email}) about ${product.title} x ${result.product_quantity}`,
-      );
+      try {
+        console.log('sending telegram message');
+        await this.telegramService.sendMessage(
+          `You got a new pre-order! From ${result.user_full_name} (${result.user_email}) about ${product.title} x ${result.product_quantity}`,
+        );
+      } catch (error) {
+        console.error('Error while sending telegram message', error);
+      }
     }
 
     return result;
