@@ -3,6 +3,14 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdatePreOrdersDto {
   @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    default: 'autoincrement',
+    required: false,
+    nullable: true,
+  })
+  pre_order_number?: number | null;
+  @ApiProperty({
     type: () => Object,
     required: false,
   })

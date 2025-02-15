@@ -205,6 +205,7 @@ model orders {
 
 model pre_orders {
   id               String    @id @default(uuid())
+  pre_order_number Int?      @default(autoincrement())
   product          Json
   product_quantity Int
   user_address     String

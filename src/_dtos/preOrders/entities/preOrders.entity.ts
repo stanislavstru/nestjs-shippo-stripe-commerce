@@ -7,6 +7,12 @@ export class PreOrdersEntity {
   })
   id: string;
   @ApiProperty({
+    type: 'integer',
+    format: 'int32',
+    nullable: true,
+  })
+  pre_order_number: number | null;
+  @ApiProperty({
     type: () => Object,
   })
   product: Prisma.JsonValue;

@@ -136,6 +136,7 @@ export interface orders_model_type {
 
 export interface pre_orders_model_type {
   id: string;
+  pre_order_number: number | null;
   product: JsonValue;
   product_quantity: number;
   user_address: string;
