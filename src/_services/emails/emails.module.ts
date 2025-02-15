@@ -13,7 +13,8 @@ import { PrismaService } from '@/prisma/prisma.service';
           user: process.env.SMTP_USER,
           pass: process.env.SMTP_PASS,
         },
-        debug: true,
+        port: process.env.SMTP_PORT,
+        secure: false,
       },
       defaults: {
         from: `${process.env.SMTP_FROM ? 'WCO Market Team' : 'Feedback'}<${process.env.SMTP_USER}>`,
