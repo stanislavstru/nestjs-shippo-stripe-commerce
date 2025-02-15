@@ -86,8 +86,10 @@ model posts {
 
   title      String?
   content    String?
+  images     String[]
   published  Boolean  @default(false)
   created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model product_categories {
@@ -202,11 +204,13 @@ model orders {
 }
 
 model pre_orders {
-  id               String  @id @default(uuid())
+  id               String    @id @default(uuid())
   product          Json
   product_quantity Int
   user_address     String
   user_full_name   String
   user_email       String
   content          String?
+  created_at       DateTime? @default(now())
+  updated_at       DateTime? @updatedAt
 }

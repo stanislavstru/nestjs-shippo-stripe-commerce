@@ -26,6 +26,11 @@ export class PostsEntity {
   })
   content: string | null;
   @ApiProperty({
+    type: 'string',
+    isArray: true,
+  })
+  images: string[];
+  @ApiProperty({
     type: 'boolean',
   })
   published: boolean;
@@ -34,4 +39,9 @@ export class PostsEntity {
     format: 'date-time',
   })
   created_at: Date;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+  })
+  updated_at: Date;
 }

@@ -32,4 +32,16 @@ export class PreOrdersEntity {
     nullable: true,
   })
   content: string | null;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    nullable: true,
+  })
+  created_at: Date | null;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    nullable: true,
+  })
+  updated_at: Date | null;
 }

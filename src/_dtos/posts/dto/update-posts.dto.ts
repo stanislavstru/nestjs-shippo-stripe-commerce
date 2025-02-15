@@ -13,4 +13,10 @@ export class UpdatePostsDto {
     nullable: true,
   })
   content?: string | null;
+  @ApiProperty({
+    type: 'string',
+    isArray: true,
+    required: false,
+  })
+  images?: string[];
 }

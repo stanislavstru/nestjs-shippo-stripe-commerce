@@ -29,4 +29,12 @@ export class CreatePreOrdersDto {
     nullable: true,
   })
   content?: string | null;
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    default: 'now',
+    required: false,
+    nullable: true,
+  })
+  created_at?: Date | null;
 }

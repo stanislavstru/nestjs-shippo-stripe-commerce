@@ -46,8 +46,10 @@ export interface posts_model_type {
   users?: users_model_type;
   title: string | null;
   content: string | null;
+  images: string[];
   published: boolean;
   created_at: Date;
+  updated_at: Date;
 }
 
 export interface product_categories_model_type {
@@ -140,6 +142,8 @@ export interface pre_orders_model_type {
   user_full_name: string;
   user_email: string;
   content: string | null;
+  created_at: Date | null;
+  updated_at: Date | null;
 }
 
 type JsonValue = string | number | boolean | { [key in string]?: JsonValue } | Array<JsonValue> | null;

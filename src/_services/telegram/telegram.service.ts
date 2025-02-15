@@ -26,7 +26,7 @@ export class TelegramService {
         parse_mode: 'HTML',
       };
 
-      const response = await fetch(this.mainHandler + '/sendMessage', {
+      await fetch(this.mainHandler + '/sendMessage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export class TelegramService {
         body: JSON.stringify(body),
       });
 
-      console.log('Telegram send message response. ', response);
+      console.log('Telegram message was sent');
     } catch (error) {
       console.error('Error while sending message to Telegram', error);
     }

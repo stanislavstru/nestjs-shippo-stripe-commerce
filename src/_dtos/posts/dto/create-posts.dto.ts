@@ -13,4 +13,9 @@ export class CreatePostsDto {
     nullable: true,
   })
   content?: string | null;
+  @ApiProperty({
+    type: 'string',
+    isArray: true,
+  })
+  images: string[];
 }

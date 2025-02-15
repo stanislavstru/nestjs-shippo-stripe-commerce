@@ -55,6 +55,8 @@ export class EmailsService {
       'business_company',
     ]);
 
+    console.log('Before sending email', mailData.to);
+
     const result = await this.mailerService.sendMail({
       to: mailData.to,
       subject: `We have received your pre-order${process.env.CLIENT_APP_NAME ? ` (${process.env.CLIENT_APP_NAME})` : ''}`,

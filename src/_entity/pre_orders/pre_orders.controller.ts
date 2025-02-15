@@ -44,7 +44,10 @@ export class PreOrdersController {
 
     const result = await this.preOrdersService.create(createPreOrdersDto);
 
+    console.log('pre-order was put to DB');
+
     if (result) {
+      console.log('sending email to', result.user_email);
       this.emailsService.sendPreOrderCreatedEmail({
         to: result.user_email,
         customerName: result.user_full_name,
