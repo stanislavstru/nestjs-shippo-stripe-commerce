@@ -44,14 +44,22 @@ export class FeedbackRequestsController {
     );
 
     if (result) {
-      await this.emailsService.sendFeedbackRequestEmail({
-        to: result.user_email,
-        customerName: result.user_full_name,
-      });
+      try {
+        await this.emailsService.sendFeedbackRequestEmail({
+          to: result.user_email,
+          customerName: result.user_full_name,
+        });
+      } catch (error) {
+        console.error('Error while sending email', error);
+      }
 
-      await this.telegramService.sendMessage(
-        `You got a new feedback request, from ${result.user_full_name} (${result.user_email}), ${result.user_address}`,
-      );
+      try {
+        await this.telegramService.sendMessage(
+          `You got a new feedback request, from ${result.user_full_name} (${result.user_email}), ${result.user_address}`,
+        );
+      } catch (error) {
+        console.error('Error while sending telegram message', error);
+      }
     }
 
     return result;

@@ -273,28 +273,32 @@ export class StripeService {
             id: order.user_id,
           });
           if (user) {
-            this.emailsService.sendPaymentSucceededEmail({
-              to: user.email,
-              customerName: `${user.first_name} ${user.last_name}`,
-              subtotal: new Decimal(
-                +order.order_amount_subtotal / 100,
-              ).toString(),
-              delivery: new Decimal(
-                +order.order_amount_shipping / 100,
-              ).toString(),
-              tax: new Decimal(+order.order_amount_tax / 100).toString(),
-              currencySymbol: currency_symbol,
-              date: moment(order.created_at).format('MM/DD/YYYY'),
-              orderNumber: order.order_number,
-              transactionId: order.payment_id,
-              orderItems: orderItems.map((item) => ({
-                name: item.price_data.product_data.name,
-                quantity: item.quantity,
-                price: new Decimal(
-                  +item.price_data.unit_amount / 100,
+            try {
+              await this.emailsService.sendPaymentSucceededEmail({
+                to: user.email,
+                customerName: `${user.first_name} ${user.last_name}`,
+                subtotal: new Decimal(
+                  +order.order_amount_subtotal / 100,
                 ).toString(),
-              })),
-            });
+                delivery: new Decimal(
+                  +order.order_amount_shipping / 100,
+                ).toString(),
+                tax: new Decimal(+order.order_amount_tax / 100).toString(),
+                currencySymbol: currency_symbol,
+                date: moment(order.created_at).format('MM/DD/YYYY'),
+                orderNumber: order.order_number,
+                transactionId: order.payment_id,
+                orderItems: orderItems.map((item) => ({
+                  name: item.price_data.product_data.name,
+                  quantity: item.quantity,
+                  price: new Decimal(
+                    +item.price_data.unit_amount / 100,
+                  ).toString(),
+                })),
+              });
+            } catch (error) {
+              console.error('Error while sending email', error);
+            }
           } else {
             console.error('User not found');
           }

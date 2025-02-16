@@ -175,14 +175,18 @@ export class PaymentsController {
             })
             .join(', ') || 'Empty cart';
 
-        this.telegramService.sendMessage(
-          `<b>Order number: #${orderAfterPayment.order_number}, </b><i>(${orderAfterPayment.id})</i>\nNew order created, but not paid yet. Order from ${customerContact.country}, ${customerContact.city}. Total: ${
-            result?.amount_subtotal
-              ? new Decimal(result.amount_subtotal / 100) +
-                currencySymbol.config_value
-              : null
-          }.\n\n<b>Cart:</b>\n${cartToString}`,
-        );
+        try {
+          await this.telegramService.sendMessage(
+            `<b>Order number: #${orderAfterPayment.order_number}, </b><i>(${orderAfterPayment.id})</i>\nNew order created, but not paid yet. Order from ${customerContact.country}, ${customerContact.city}. Total: ${
+              result?.amount_subtotal
+                ? new Decimal(result.amount_subtotal / 100) +
+                  currencySymbol.config_value
+                : null
+            }.\n\n<b>Cart:</b>\n${cartToString}`,
+          );
+        } catch (error) {
+          console.error('Error while sending telegram message', error);
+        }
 
         console.log('Order after payment: ', orderAfterPayment);
       } else {
