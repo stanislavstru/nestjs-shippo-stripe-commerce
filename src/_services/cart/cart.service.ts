@@ -6,7 +6,9 @@ import Decimal from 'decimal.js';
 
 @Injectable()
 export class CartService {
-  private productsAccrodingToCart: ProductsEntity[] | null = null;
+  private productsAccrodingToCart:
+    | (ProductsEntity & { is_active: boolean })[]
+    | null = null;
 
   constructor(
     private productsService: ProductsService,
@@ -35,6 +37,7 @@ export class CartService {
       return {
         ...product,
         quantity: cartItem.quantity,
+        is_active: product.quantity >= cartItem.quantity,
       };
     });
   }
@@ -54,6 +57,7 @@ export class CartService {
           title: product.title,
           price: product.price,
           quantity: product.quantity,
+          is_active: product.is_active,
         };
       }),
       totalPrice: this.getTotalPrice(),
@@ -78,6 +82,7 @@ export class CartService {
 
   private getTotalPrice() {
     return this.productsAccrodingToCart.reduce((acc, product) => {
+      if (!product.is_active) return acc;
       const price = new Decimal(product.price);
       const quantity = new Decimal(product.quantity);
 
@@ -94,6 +99,8 @@ export class CartService {
       throw new BadRequestException('Weight unit is not lb');
 
     const weight = this.productsAccrodingToCart.reduce((acc, product) => {
+      if (!product.is_active) return acc;
+
       const lb = product.item_weight_primary;
       const oz = product.item_weight_secondary;
 
@@ -120,15 +127,22 @@ export class CartService {
 
     return this.productsAccrodingToCart.reduce(
       (acc, product) => {
+        if (!product.is_active) return acc;
+
         const length = product.item_length;
         const width = product.item_width;
         const height = product.item_height;
 
+        if (!length || !width || !height) {
+          throw new BadRequestException('Product dimensions are not set');
+        }
+
+        if (new Decimal(length) > acc.length) acc.length = new Decimal(length);
+        if (new Decimal(width) > acc.width) acc.width = new Decimal(width);
+
         return {
           ...acc,
-          length: acc.length.plus(length),
-          width: acc.width.plus(width),
-          height: acc.height.plus(height),
+          height: acc.height.plus(height * product.quantity),
         };
       },
       {
