@@ -21,6 +21,7 @@ import { PaymentsModule } from './_services/payments/payments.module.js';
 import { OrdersModule } from './_entity/orders/orders.module.js';
 import { EmailsModule } from './_services/emails/emails.module.js';
 import { PreOrdersModule } from './_entity/pre_orders/pre_orders.module.js';
+import { SubscriptionsModule } from './_entity/subscriptions/subscriptions.module.js';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { PreOrdersModule } from './_entity/pre_orders/pre_orders.module.js';
     OrdersModule,
     EmailsModule,
     PreOrdersModule,
+    SubscriptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PostsEntity } from '../../posts/entities/posts.entity';
 import { OauthSessionsEntity } from '../../oauthSessions/entities/oauthSessions.entity';
 import { OrdersEntity } from '../../orders/entities/orders.entity';
+import { SubscriptionsEntity } from '../../subscriptions/entities/subscriptions.entity';
 
 export class UsersEntity {
   @ApiProperty({
@@ -90,4 +91,10 @@ export class UsersEntity {
     required: false,
   })
   orders?: OrdersEntity[];
+  @ApiProperty({
+    type: () => SubscriptionsEntity,
+    isArray: true,
+    required: false,
+  })
+  subscriptions?: SubscriptionsEntity[];
 }

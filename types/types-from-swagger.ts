@@ -374,9 +374,12 @@ export interface PostsEntity {
   users?: UsersEntity;
   title: string | null;
   content: string | null;
+  images: string[];
   published: boolean;
   /** @format date-time */
   created_at: string;
+  /** @format date-time */
+  updated_at: string;
 }
 
 export interface OauthSessionsEntity {
@@ -422,6 +425,18 @@ export interface OrdersEntity {
   update_at: string;
 }
 
+export interface SubscriptionsEntity {
+  id: string;
+  user_id: string;
+  users?: UsersEntity;
+  type: 'news' | 'blog';
+  /** @format date-time */
+  created_at: string | null;
+  /** @format date-time */
+  updated_at: string | null;
+  is_active: boolean;
+}
+
 export interface UsersEntity {
   id: string;
   first_name: string;
@@ -442,9 +457,15 @@ export interface UsersEntity {
   /** @format date-time */
   update_at: string;
   orders?: OrdersEntity[];
+  subscriptions?: SubscriptionsEntity[];
 }
 
 export interface CreatePreOrdersDto {
+  /**
+   * @format int32
+   * @default "autoincrement"
+   */
+  pre_order_number?: number | null;
   product: object;
   /** @format int32 */
   product_quantity: number;
@@ -452,10 +473,17 @@ export interface CreatePreOrdersDto {
   user_full_name: string;
   user_email: string;
   content?: string | null;
+  /**
+   * @format date-time
+   * @default "now"
+   */
+  created_at?: string | null;
 }
 
 export interface PreOrdersEntity {
   id: string;
+  /** @format int32 */
+  pre_order_number: number | null;
   product: object;
   /** @format int32 */
   product_quantity: number;
@@ -463,9 +491,18 @@ export interface PreOrdersEntity {
   user_full_name: string;
   user_email: string;
   content: string | null;
+  /** @format date-time */
+  created_at: string | null;
+  /** @format date-time */
+  updated_at: string | null;
 }
 
 export interface UpdatePreOrdersDto {
+  /**
+   * @format int32
+   * @default "autoincrement"
+   */
+  pre_order_number?: number | null;
   product?: object;
   /** @format int32 */
   product_quantity?: number;
@@ -473,4 +510,46 @@ export interface UpdatePreOrdersDto {
   user_full_name?: string;
   user_email?: string;
   content?: string | null;
+  /**
+   * @format date-time
+   * @default "now"
+   */
+  created_at?: string | null;
+}
+
+export interface SubscriptionCreateByTypeDto {
+  first_name: string;
+  email: string;
+  type: 'news' | 'blog';
+}
+
+export interface SubscriptionsDto {
+  id: string;
+  user_id: string;
+  type: 'news' | 'blog';
+  /** @format date-time */
+  created_at: string | null;
+  /** @format date-time */
+  updated_at: string | null;
+  is_active: boolean;
+}
+
+export interface SubscriptionsAllByIdDto {
+  id: string;
+  type: 'news' | 'blog';
+  /** @format date-time */
+  created_at: string | null;
+  /** @format date-time */
+  updated_at: string | null;
+  is_active: boolean;
+}
+
+export interface UpdateSubscriptionsDto {
+  user_id?: string;
+  type?: 'news' | 'blog';
+  /**
+   * @format date-time
+   * @default "now"
+   */
+  created_at?: string | null;
 }

@@ -59,9 +59,10 @@ model users {
   posts          posts?
   oauth_sessions oauth_sessions?
 
-  created_at DateTime @default(now())
-  update_at  DateTime @updatedAt
-  orders     orders[]
+  created_at    DateTime        @default(now())
+  update_at     DateTime        @updatedAt
+  orders        orders[]
+  subscriptions subscriptions[]
 }
 
 model oauth_sessions {
@@ -214,4 +215,25 @@ model pre_orders {
   content          String?
   created_at       DateTime? @default(now())
   updated_at       DateTime? @updatedAt
+}
+
+enum SubscriptionsType {
+  news
+  blog
+}
+
+model subscriptions {
+  id String @id @default(uuid())
+
+  /// @DtoRelationIncludeId
+  user_id String
+  /// @DtoRelationRequired
+  users   users  @relation(fields: [user_id], references: [id])
+
+  type SubscriptionsType
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @updatedAt
+
+  is_active Boolean? @default(true)
 }

@@ -1190,6 +1190,98 @@
           "Pre Orders"
         ]
       }
+    },
+    "/api/v1/subscriptions/create-by-type": {
+      "post": {
+        "operationId": "SubscriptionsController_createSubscriptionByType_api/v1",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscriptionCreateByTypeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
+    },
+    "/api/v1/subscriptions/{id}": {
+      "get": {
+        "operationId": "SubscriptionsController_allSubscriptionById_api/v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionsByIdDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      },
+      "delete": {
+        "operationId": "SubscriptionsController_update_api/v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionsByIdDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subscriptions"
+        ]
+      }
     }
   },
   "info": {
@@ -2209,10 +2301,20 @@
             "type": "string",
             "nullable": true
           },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "published": {
             "type": "boolean"
           },
           "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
             "type": "string",
             "format": "date-time"
           }
@@ -2222,8 +2324,10 @@
           "user_id",
           "title",
           "content",
+          "images",
           "published",
-          "created_at"
+          "created_at",
+          "updated_at"
         ]
       },
       "OauthSessionsEntity": {
@@ -2367,6 +2471,49 @@
           "update_at"
         ]
       },
+      "SubscriptionsEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "users": {
+            "$ref": "#/components/schemas/UsersEntity"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "news",
+              "blog"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "type",
+          "created_at",
+          "updated_at",
+          "is_active"
+        ]
+      },
       "UsersEntity": {
         "type": "object",
         "properties": {
@@ -2447,6 +2594,12 @@
             "items": {
               "$ref": "#/components/schemas/OrdersEntity"
             }
+          },
+          "subscriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionsEntity"
+            }
           }
         },
         "required": [
@@ -2469,6 +2622,12 @@
       "CreatePreOrdersDto": {
         "type": "object",
         "properties": {
+          "pre_order_number": {
+            "type": "integer",
+            "format": "int32",
+            "default": "autoincrement",
+            "nullable": true
+          },
           "product": {
             "type": "object"
           },
@@ -2487,6 +2646,12 @@
           },
           "content": {
             "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now",
             "nullable": true
           }
         },
@@ -2504,6 +2669,11 @@
           "id": {
             "type": "string"
           },
+          "pre_order_number": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "product": {
             "type": "object"
           },
@@ -2522,22 +2692,41 @@
           },
           "content": {
             "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
         "required": [
           "id",
+          "pre_order_number",
           "product",
           "product_quantity",
           "user_address",
           "user_full_name",
           "user_email",
-          "content"
+          "content",
+          "created_at",
+          "updated_at"
         ]
       },
       "UpdatePreOrdersDto": {
         "type": "object",
         "properties": {
+          "pre_order_number": {
+            "type": "integer",
+            "format": "int32",
+            "default": "autoincrement",
+            "nullable": true
+          },
           "product": {
             "type": "object"
           },
@@ -2557,8 +2746,112 @@
           "content": {
             "type": "string",
             "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now",
+            "nullable": true
           }
         }
+      },
+      "SubscriptionCreateByTypeDto": {
+        "type": "object",
+        "properties": {
+          "first_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "news",
+              "blog"
+            ]
+          }
+        },
+        "required": [
+          "first_name",
+          "email",
+          "type"
+        ]
+      },
+      "SubscriptionsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "news",
+              "blog"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "type",
+          "created_at",
+          "updated_at",
+          "is_active"
+        ]
+      },
+      "SubscriptionsByIdDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "news",
+              "blog"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "created_at",
+          "updated_at",
+          "is_active"
+        ]
       }
     }
   }
