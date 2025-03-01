@@ -4,7 +4,7 @@ import { AppModule } from './app.module.js';
 import { VersioningType } from '@nestjs/common';
 import { ValidationPipe } from './validation/validation.pipe';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
-import { writeFileSync } from 'fs';
+// import { writeFileSync } from 'fs';
 import * as bodyParser from 'body-parser';
 import { ConfigModule } from '@nestjs/config';
 
@@ -62,7 +62,7 @@ async function bootstrap() {
     ],
   });
 
-  writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
+  // writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
   await app.listen(8080);
   console.log(`Application is running on: ${await app.getUrl()}`);
