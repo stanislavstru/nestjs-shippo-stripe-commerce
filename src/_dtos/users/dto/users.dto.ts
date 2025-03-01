@@ -53,6 +53,11 @@ export class UsersDto {
     type: 'string',
     nullable: true,
   })
+  instagram: string | null;
+  @ApiProperty({
+    type: 'string',
+    nullable: true,
+  })
   picture: string | null;
   @ApiProperty({
     type: 'string',

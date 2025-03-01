@@ -434,7 +434,7 @@ export interface SubscriptionsEntity {
   created_at: string | null;
   /** @format date-time */
   updated_at: string | null;
-  is_active: boolean;
+  is_active: boolean | null;
 }
 
 export interface UsersEntity {
@@ -448,6 +448,7 @@ export interface UsersEntity {
   zip: string | null;
   phone: string | null;
   email: string | null;
+  instagram: string | null;
   picture: string | null;
   roles: string[];
   posts?: PostsEntity | null;
@@ -521,6 +522,7 @@ export interface SubscriptionCreateByTypeDto {
   first_name: string;
   email: string;
   type: 'news' | 'blog';
+  instagram?: string;
 }
 
 export interface SubscriptionsDto {
@@ -531,10 +533,10 @@ export interface SubscriptionsDto {
   created_at: string | null;
   /** @format date-time */
   updated_at: string | null;
-  is_active: boolean;
+  is_active: boolean | null;
 }
 
-export interface SubscriptionsAllByIdDto {
+export interface SubscriptionsByIdDto {
   id: string;
   type: 'news' | 'blog';
   /** @format date-time */
@@ -542,14 +544,4 @@ export interface SubscriptionsAllByIdDto {
   /** @format date-time */
   updated_at: string | null;
   is_active: boolean;
-}
-
-export interface UpdateSubscriptionsDto {
-  user_id?: string;
-  type?: 'news' | 'blog';
-  /**
-   * @format date-time
-   * @default "now"
-   */
-  created_at?: string | null;
 }

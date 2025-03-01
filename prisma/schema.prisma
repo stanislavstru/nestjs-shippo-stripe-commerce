@@ -52,6 +52,7 @@ model users {
   zip        String?
   phone      String?
   email      String? @unique(map: "email_unique")
+  instagram  String?
 
   picture String?
   roles   String[] @default(["guest"])

@@ -85,6 +85,24 @@ export class PaymentsController {
 
         userId = newUser.id;
       } else {
+        const updatedUser = await this.usersService.updateUser({
+          where: { id: user.id },
+          data: {
+            first_name: customerContact.firstName,
+            last_name: customerContact.lastName,
+            address: customerContact.address,
+            address2: customerContact.address2 ?? null,
+            city: customerContact.city,
+            state: customerContact.state,
+            zip: customerContact.zip,
+            phone: customerContact?.phone ?? null,
+            roles: [Role.GUEST],
+          },
+        });
+
+        if (!updatedUser)
+          throw new BadRequestException('Failed to update user');
+
         userId = user.id;
       }
     } else {

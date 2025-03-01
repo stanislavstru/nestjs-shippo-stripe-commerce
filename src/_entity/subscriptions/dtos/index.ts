@@ -12,6 +12,9 @@ export class SubscriptionCreateByTypeDto {
     enum: SubscriptionsType,
   })
   type: SubscriptionsType;
+
+  @ApiProperty({ type: 'string', required: false })
+  instagram?: string;
 }
 
 export class SubscriptionsByIdDto {

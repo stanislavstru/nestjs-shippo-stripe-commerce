@@ -58,5 +58,11 @@ export class CreateUsersDto {
     required: false,
     nullable: true,
   })
+  instagram?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
   picture?: string | null;
 }

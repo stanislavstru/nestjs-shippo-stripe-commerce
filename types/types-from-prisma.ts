@@ -21,6 +21,7 @@ export interface users_model_type {
   zip: string | null;
   phone: string | null;
   email: string | null;
+  instagram: string | null;
   picture: string | null;
   roles: string[];
   posts?: posts_model_type | null;

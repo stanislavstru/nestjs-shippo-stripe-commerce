@@ -48,6 +48,9 @@ export class SubscriptionsController {
       user = await this.usersService.createUser({
         email: createSubscriptionDto.email,
         first_name: createSubscriptionDto.first_name,
+        ...(createSubscriptionDto.instagram
+          ? { instagram: createSubscriptionDto.instagram }
+          : {}),
       });
     }
 
