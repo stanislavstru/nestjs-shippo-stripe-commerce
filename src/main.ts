@@ -11,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 ConfigModule.forRoot();
 
 async function bootstrap() {
+  const isDevelopment = process.env.NODE_ENV === 'development';
   const app = await NestFactory.create(AppModule);
 
   app.enableVersioning({
@@ -62,7 +63,9 @@ async function bootstrap() {
     ],
   });
 
-  writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
+  if (isDevelopment) {
+    writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
+  }
 
   await app.listen(8080);
   console.log(`Application is running on: ${await app.getUrl()}`);
