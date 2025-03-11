@@ -115,7 +115,7 @@ export class PaymentsController {
     if (paymentService.config_value === 'stripe') {
       const initialOrder = await this.ordersService.create({
         user_id: userId,
-        payment_id: '',
+        payment_id: null,
         order_status: 'open',
         order_amount_subtotal: null,
         order_amount_total: null,

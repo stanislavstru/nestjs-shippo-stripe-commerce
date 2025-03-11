@@ -184,7 +184,7 @@ model orders {
   /// @DtoRelationRequired
   users   users  @relation(fields: [user_id], references: [id])
 
-  payment_id String @unique
+  payment_id String? @unique
 
   order_number          Int      @default(autoincrement())
   order_status          String

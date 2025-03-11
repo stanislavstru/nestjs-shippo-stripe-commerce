@@ -8,8 +8,10 @@ export class CreateOrdersDto {
   user_id: string;
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
   })
-  payment_id: string;
+  payment_id?: string | null;
   @ApiProperty({
     type: 'string',
   })

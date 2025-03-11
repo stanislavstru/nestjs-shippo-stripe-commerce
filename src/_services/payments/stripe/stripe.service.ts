@@ -71,7 +71,7 @@ export class StripeService {
           city: customerContact.city,
           state: customerContact.state,
           postal_code: customerContact.zip,
-          country: 'US',
+          country: customerContact.country,
         },
         ...(customerContact.metadata?.user_id
           ? { metadata: { user_id: customerContact.metadata.user_id } }

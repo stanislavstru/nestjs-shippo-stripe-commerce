@@ -38,9 +38,9 @@ export class ShippoService {
         addressTo: addressTo,
         parcels: [parcel],
         async: false,
-        ...(process.env.SHIPPO_CARRIER_ACCOUNTS
-          ? { carrierAccounts: process.env.SHIPPO_CARRIER_ACCOUNTS.split(',') }
-          : {}),
+        // ...(process.env.SHIPPO_CARRIER_ACCOUNTS
+        //   ? { carrierAccounts: process.env.SHIPPO_CARRIER_ACCOUNTS.split(',') }
+        //   : {}),
       });
 
       return shipment;

@@ -9,6 +9,11 @@
  * ---------------------------------------------------------------
  */
 
+export interface AuthResponseDto {
+  access_token: string;
+  roles: ('admin' | 'customer' | 'guest')[];
+}
+
 export interface CreateProductsDto {
   slug: string;
   /** @format int32 */

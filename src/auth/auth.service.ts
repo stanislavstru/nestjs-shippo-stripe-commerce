@@ -39,8 +39,11 @@ export class AuthService {
   }
 
   async generateJWTToken(user: JWTTokenGenerateType) {
+    const accessToken = await this.createAccessToken(user);
+
     const jwtToken = {
-      access_token: await this.createAccessToken(user),
+      access_token: accessToken,
+      role: user.roles,
     };
 
     console.log('jwtToken', jwtToken);

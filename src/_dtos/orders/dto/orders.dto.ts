@@ -12,8 +12,9 @@ export class OrdersDto {
   user_id: string;
   @ApiProperty({
     type: 'string',
+    nullable: true,
   })
-  payment_id: string;
+  payment_id: string | null;
   @ApiProperty({
     type: 'integer',
     format: 'int32',

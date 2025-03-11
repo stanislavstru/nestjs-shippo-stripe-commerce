@@ -34,8 +34,15 @@
         "operationId": "AuthController_googleCallback_api/v1",
         "parameters": [],
         "responses": {
-          "200": {
-            "description": ""
+          "302": {
+            "description": "Redirects to the specified URL with parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1304,6 +1311,29 @@
       }
     },
     "schemas": {
+      "AuthResponseDto": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "admin",
+                "customer",
+                "guest"
+              ]
+            }
+          }
+        },
+        "required": [
+          "access_token",
+          "roles"
+        ]
+      },
       "CreateProductsDto": {
         "type": "object",
         "properties": {
@@ -2224,7 +2254,8 @@
             "type": "string"
           },
           "payment_id": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "order_status": {
             "type": "string"
@@ -2273,7 +2304,6 @@
         },
         "required": [
           "user_id",
-          "payment_id",
           "order_status",
           "order_items",
           "payment_status",
@@ -2392,7 +2422,8 @@
             "$ref": "#/components/schemas/UsersEntity"
           },
           "payment_id": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "order_number": {
             "type": "integer",

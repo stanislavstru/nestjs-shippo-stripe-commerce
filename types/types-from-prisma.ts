@@ -121,7 +121,7 @@ export interface orders_model_type {
   id: string;
   user_id: string;
   users?: users_model_type;
-  payment_id: string;
+  payment_id: string | null;
   order_number: number;
   order_status: string;
   order_amount_subtotal: Decimal | null;
