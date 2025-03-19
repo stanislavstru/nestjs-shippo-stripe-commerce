@@ -41,6 +41,10 @@ const queries = [
     config_key: 'business_email',
     config_value: '',
   },
+  {
+    config_key: 'business_owner',
+    config_value: '',
+  },
 ];
 
 const prisma = new PrismaClient();

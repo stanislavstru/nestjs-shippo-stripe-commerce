@@ -161,6 +161,14 @@ export interface subscriptions_model_type {
   is_active: boolean | null;
 }
 
+export interface shipping_calculation_model_type {
+  id: string;
+  cart_items: JsonValue;
+  shipment_object: JsonValue;
+  created_at: Date;
+  update_at: Date;
+}
+
 type JsonValue = string | number | boolean | { [key in string]?: JsonValue } | Array<JsonValue> | null;
 
 type Decimal = { valueOf(): string };

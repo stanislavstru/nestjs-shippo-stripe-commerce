@@ -18,6 +18,7 @@ const mainConfigKeysEnum = [
   'business_country',
   'business_phone',
   'business_email',
+  'business_owner',
 ];
 
 export type mainConfigKeysType =
@@ -37,7 +38,8 @@ export type mainConfigKeysType =
   | 'business_zip'
   | 'business_country'
   | 'business_phone'
-  | 'business_email';
+  | 'business_email'
+  | 'business_owner';
 
 const mainConfigValuesEnum = ['usd', '$', 'lb', 'oz', 'in', 'shippo', 'stripe'];
 export type mainConfigValuesType =

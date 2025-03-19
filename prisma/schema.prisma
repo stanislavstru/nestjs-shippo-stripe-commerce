@@ -238,3 +238,13 @@ model subscriptions {
 
   is_active Boolean? @default(true)
 }
+
+model shipping_calculation {
+  id String @id @default(uuid())
+
+  cart_items      Json
+  shipment_object Json
+
+  created_at DateTime @default(now())
+  update_at  DateTime @updatedAt
+}

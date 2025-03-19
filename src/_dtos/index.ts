@@ -16,6 +16,8 @@ export * from './productCategories/dto';
 export * from './productCategories/entities';
 export * from './products/dto';
 export * from './products/entities';
+export * from './shippingCalculation/dto';
+export * from './shippingCalculation/entities';
 export * from './subscriptions/dto';
 export * from './subscriptions/entities';
 export * from './users/dto';

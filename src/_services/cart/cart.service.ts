@@ -55,6 +55,9 @@ export class CartService {
         return {
           id: product.id,
           title: product.title,
+          weight: new Decimal(product.item_weight_primary).plus(
+            new Decimal(product.item_weight_secondary).dividedBy(16),
+          ),
           price: product.price,
           quantity: product.quantity,
           is_active: product.is_active,
@@ -104,11 +107,13 @@ export class CartService {
       const lb = product.item_weight_primary;
       const oz = product.item_weight_secondary;
 
-      return acc.plus(
-        new Decimal(lb)
-          .plus(new Decimal(oz).dividedBy(16))
-          .times(product.quantity),
-      );
+      return acc
+        .plus(
+          new Decimal(lb)
+            .plus(new Decimal(oz).dividedBy(16))
+            .times(product.quantity),
+        )
+        .toFixed(2);
     }, new Decimal(0));
 
     return {
