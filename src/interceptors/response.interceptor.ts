@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   NestInterceptor,
+  HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { Observable, throwError, TimeoutError } from 'rxjs';
@@ -28,21 +29,35 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
       })),
       timeout(5000),
       catchError((err) => {
-        const res = context.switchToHttp().getResponse();
-
         if (err instanceof TimeoutError) {
-          res
-            .status(HttpStatus.REQUEST_TIMEOUT)
-            .send('Request has timed out. Please try again later.');
-          return throwError(() => err); // завершает Observable
+          // Возвращаем кастомный ответ
+          return throwError(
+            () =>
+              new HttpException(
+                {
+                  statusCode: HttpStatus.REQUEST_TIMEOUT,
+                  message: 'Request has timed out. Please try again later.',
+                  error: 'TimeoutError',
+                },
+                HttpStatus.REQUEST_TIMEOUT,
+              ),
+          );
         }
 
-        const statusCode = err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
-        const message =
-          err?.response?.message || err?.message || 'Internal server error';
-
-        res.status(statusCode).send(message);
-        return throwError(() => err);
+        return throwError(
+          () =>
+            new HttpException(
+              {
+                response: null,
+                error:
+                  err?.response?.message ||
+                  err?.message ||
+                  'Internal server error',
+                statusCode: err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
+              },
+              err?.status ?? HttpStatus.INTERNAL_SERVER_ERROR,
+            ),
+        );
       }),
     );
   }

@@ -4,6 +4,7 @@ import { ApiOkResponse } from '@nestjs/swagger';
 import { CartService } from './cart.service';
 import { ProductsEntity } from '@/_dtos/products/entities';
 import Decimal from 'decimal.js';
+import { HttpException } from '@nestjs/common';
 
 export class CartInfo {
   data: {
@@ -31,6 +32,11 @@ export class CartController {
       quantity: number;
     }[],
   ) {
-    return this.cartService.getCartInformation(cart);
+    try {
+      return this.cartService.getCartInformation(cart);
+    } catch (err) {
+      console.error('Error in getCartInformation:', err);
+      throw new HttpException('Failed to get cart info', 500);
+    }
   }
 }
