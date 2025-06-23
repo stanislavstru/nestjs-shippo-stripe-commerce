@@ -4,14 +4,14 @@ import { AppModule } from './app.module.js';
 import { VersioningType } from '@nestjs/common';
 import { ValidationPipe } from './validation/validation.pipe';
 import { ResponseInterceptor } from './interceptors/response.interceptor';
-import { writeFileSync } from 'fs';
+// import { writeFileSync } from 'fs';
 import * as bodyParser from 'body-parser';
 import { ConfigModule } from '@nestjs/config';
 
 ConfigModule.forRoot();
 
 async function bootstrap() {
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  // const isDevelopment = process.env.NODE_ENV === 'development';
   const app = await NestFactory.create(AppModule);
 
   app.enableVersioning({
@@ -63,9 +63,9 @@ async function bootstrap() {
     ],
   });
 
-  if (isDevelopment) {
-    writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
-  }
+  // if (isDevelopment) {
+  //   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
+  // }
 
   await app.listen(8080);
   console.log(`Application is running on: ${await app.getUrl()}`);
