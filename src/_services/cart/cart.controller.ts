@@ -33,9 +33,10 @@ export class CartController {
     }[],
   ) {
     try {
+      console.log('Received cart:', cart);
       return this.cartService.getCartInformation(cart);
     } catch (err) {
-      console.error('Error in getCartInformation:', err);
+      console.log('Error in getCartInformation:', err);
       throw new HttpException('Failed to get cart info', 500);
     }
   }

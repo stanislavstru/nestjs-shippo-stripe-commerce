@@ -84,13 +84,21 @@ export class CartService {
   }
 
   private getTotalPrice() {
-    return this.productsAccrodingToCart.reduce((acc, product) => {
-      if (!product.is_active) return acc;
-      const price = new Decimal(product.price);
-      const quantity = new Decimal(product.quantity);
+    try {
+      return this.productsAccrodingToCart.reduce((acc, product) => {
+        if (!product.is_active || product.quantity === 0) return acc;
+        const price = new Decimal(product.price);
 
-      return acc.plus(price.times(quantity));
-    }, new Decimal(0));
+        const quantity = new Decimal(product.quantity);
+
+        const equal = acc.plus(price.times(quantity));
+
+        return equal;
+      }, new Decimal(0));
+    } catch (error) {
+      console.error('Error calculating total price:', error);
+      throw new BadRequestException('Failed to calculate total price');
+    }
   }
 
   private getTotalWeightInLb() {
@@ -101,25 +109,32 @@ export class CartService {
     if (product_weight_primary_unit !== 'lb')
       throw new BadRequestException('Weight unit is not lb');
 
-    const weight = this.productsAccrodingToCart.reduce((acc, product) => {
-      if (!product.is_active) return acc;
+    try {
+      const weight = this.productsAccrodingToCart.reduce((acc, product) => {
+        if (!product.is_active) return acc;
 
-      const lb = product.item_weight_primary;
-      const oz = product.item_weight_secondary;
+        const lb = product.item_weight_primary;
 
-      return acc
-        .plus(
-          new Decimal(lb)
-            .plus(new Decimal(oz).dividedBy(16))
-            .times(product.quantity),
-        )
-        .toFixed(2);
-    }, new Decimal(0));
+        const oz = product.item_weight_secondary;
 
-    return {
-      weight,
-      weightUnit: product_weight_primary_unit,
-    };
+        const totalWeight = new Decimal(lb)
+          .plus(new Decimal(oz).dividedBy(16))
+          .times(product.quantity)
+          .toFixed(2);
+
+        const result = acc.plus(totalWeight);
+
+        return result;
+      }, new Decimal(0));
+
+      return {
+        weight,
+        weightUnit: product_weight_primary_unit,
+      };
+    } catch (error) {
+      console.error('Error calculating total weight:', error);
+      throw new BadRequestException('Failed to calculate total weight');
+    }
   }
 
   private getTotalDimensions() {
@@ -130,32 +145,38 @@ export class CartService {
     if (product_dimensions_unit !== 'in')
       throw new BadRequestException('Weight unit is not lb');
 
-    return this.productsAccrodingToCart.reduce(
-      (acc, product) => {
-        if (!product.is_active) return acc;
+    try {
+      return this.productsAccrodingToCart.reduce(
+        (acc, product) => {
+          if (!product.is_active) return acc;
 
-        const length = product.item_length;
-        const width = product.item_width;
-        const height = product.item_height;
+          const length = product.item_length;
+          const width = product.item_width;
+          const height = product.item_height;
 
-        if (!length || !width || !height) {
-          throw new BadRequestException('Product dimensions are not set');
-        }
+          if (!length || !width || !height) {
+            throw new BadRequestException('Product dimensions are not set');
+          }
 
-        if (new Decimal(length) > acc.length) acc.length = new Decimal(length);
-        if (new Decimal(width) > acc.width) acc.width = new Decimal(width);
+          if (new Decimal(length) > acc.length)
+            acc.length = new Decimal(length);
+          if (new Decimal(width) > acc.width) acc.width = new Decimal(width);
 
-        return {
-          ...acc,
-          height: acc.height.plus(height * product.quantity),
-        };
-      },
-      {
-        length: new Decimal(0),
-        width: new Decimal(0),
-        height: new Decimal(0),
-        distanceUnit: product_dimensions_unit,
-      },
-    );
+          return {
+            ...acc,
+            height: acc.height.plus(height * product.quantity),
+          };
+        },
+        {
+          length: new Decimal(0),
+          width: new Decimal(0),
+          height: new Decimal(0),
+          distanceUnit: product_dimensions_unit,
+        },
+      );
+    } catch (error) {
+      console.error('Error calculating total dimensions:', error);
+      throw new BadRequestException('Failed to calculate total dimensions');
+    }
   }
 }

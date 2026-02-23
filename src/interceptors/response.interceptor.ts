@@ -29,6 +29,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
       })),
       timeout(5000),
       catchError((err) => {
+        console.log('Error in ResponseInterceptor:', err);
         if (err instanceof TimeoutError) {
           // Возвращаем кастомный ответ
           return throwError(
