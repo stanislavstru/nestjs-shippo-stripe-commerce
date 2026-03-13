@@ -90,13 +90,9 @@ export class PaymentsController {
           data: {
             first_name: customerContact.firstName,
             last_name: customerContact.lastName,
-            address: customerContact.address,
-            address2: customerContact.address2 ?? null,
-            city: customerContact.city,
-            state: customerContact.state,
-            zip: customerContact.zip,
             phone: customerContact?.phone ?? null,
             roles: [Role.GUEST],
+            update_at: new Date(),
           },
         });
 
@@ -113,6 +109,11 @@ export class PaymentsController {
     // Redirecting to the payment service
     // #####################################################
     if (paymentService.config_value === 'stripe') {
+      const extendedDetails = {
+        ...body.shippingDetails,
+        recipient: body.customerContact,
+      };
+
       const initialOrder = await this.ordersService.create({
         user_id: userId,
         payment_id: null,
@@ -125,7 +126,7 @@ export class PaymentsController {
         order_items: JSON.stringify(body.lineItems),
         payment_status: 'pending',
         shipping_order_id: body.shippingDetails.delivery.id,
-        shipping_details: JSON.stringify(body.shippingDetails),
+        shipping_details: JSON.stringify(extendedDetails),
         shipping_options: JSON.stringify(body.shippingOptions),
       });
 
@@ -186,22 +187,66 @@ export class PaymentsController {
 
       if (orderAfterPayment) {
         const customerContact = body.customerContact;
+        const currency = currencySymbol.config_value ?? '';
+        const formatMoney = (amountInCents?: number | null) =>
+          typeof amountInCents === 'number'
+            ? `${new Decimal(amountInCents).div(100).toFixed(2)}${currency}`
+            : 'N/A';
+        const formatTextValue = (value?: string | number | null) =>
+          value !== undefined && value !== null && value !== ''
+            ? String(value)
+            : 'N/A';
         const cartToString =
           body?.lineItems
-            ?.map((item) => {
-              return `${item.price_data.product_data.name}, ${item.quantity}x\n`;
+            ?.map((item, index) => {
+              const unitAmount = item?.price_data?.unit_amount ?? 0;
+              const quantity = item?.quantity ?? 0;
+              const lineTotal = unitAmount * quantity;
+
+              return (
+                `${index + 1}. ${item.price_data.product_data.name}\n` +
+                `   Product ID: ${formatTextValue(item.product_id)}\n` +
+                `   Qty: ${quantity}\n` +
+                `   Unit price: ${formatMoney(unitAmount)}\n` +
+                `   Line total: ${formatMoney(lineTotal)}`
+              );
             })
-            .join(', ') || 'Empty cart';
+            .join('\n\n') || 'Empty cart';
+
+        const telegramMessage =
+          `<b>New order created (not paid yet)</b>\n` +
+          `<b>Order number:</b> #${orderAfterPayment.order_number} <i>(${orderAfterPayment.id})</i>\n` +
+          `<b>Payment session:</b> ${formatTextValue(result?.id)}\n` +
+          `<b>Payment status:</b> ${formatTextValue(result?.payment_status)}\n` +
+          `<b>Order status:</b> ${formatTextValue(result?.status)}\n\n` +
+          `<b>Amounts</b>\n` +
+          `Subtotal: ${formatMoney(result?.amount_subtotal)}\n` +
+          `Shipping: ${formatMoney(result?.total_details?.amount_shipping)}\n` +
+          `Tax: ${formatMoney(result?.total_details?.amount_tax)}\n` +
+          `Discount: ${formatMoney(result?.total_details?.amount_discount)}\n` +
+          `Total: ${formatMoney(result?.amount_total)}\n\n` +
+          `<b>Customer</b>\n` +
+          `${formatTextValue(customerContact.firstName)} ${formatTextValue(customerContact.lastName)}\n` +
+          `Email: ${formatTextValue(customerContact.email)}\n` +
+          `Phone: ${formatTextValue(customerContact.phone)}\n` +
+          `Country: ${formatTextValue(customerContact.country)}\n` +
+          `State: ${formatTextValue(customerContact.state)}\n` +
+          `City: ${formatTextValue(customerContact.city)}\n` +
+          `ZIP: ${formatTextValue(customerContact.zip)}\n` +
+          `Address: ${formatTextValue(customerContact.address)}\n` +
+          `Address 2: ${formatTextValue(customerContact.address2)}\n\n` +
+          `<b>Shipping</b>\n` +
+          `Delivery ID: ${formatTextValue(body.shippingDetails?.delivery?.id)}\n` +
+          `Estimated days: ${formatTextValue(body.shippingDetails?.delivery?.estimatedDays)}\n` +
+          `Duration terms: ${formatTextValue(body.shippingDetails?.delivery?.durationTerms)}\n` +
+          `Service ID: ${formatTextValue(body.shippingDetails?.service?.id)}\n` +
+          `Provider: ${formatTextValue(body.shippingDetails?.service?.provider)}\n` +
+          `Service name: ${formatTextValue(body.shippingDetails?.service?.name)}\n` +
+          `Shipping price: ${formatTextValue(body.shippingDetails?.price?.amount)} ${formatTextValue(body.shippingDetails?.price?.currency)}\n\n` +
+          `<b>Cart</b>\n${cartToString}`;
 
         try {
-          await this.telegramService.sendMessage(
-            `<b>Order number: #${orderAfterPayment.order_number}, </b><i>(${orderAfterPayment.id})</i>\nNew order created, but not paid yet. Order from ${customerContact.country}, ${customerContact.city}. Total: ${
-              result?.amount_subtotal
-                ? new Decimal(result.amount_subtotal / 100) +
-                  currencySymbol.config_value
-                : null
-            }.\n\n<b>Cart:</b>\n${cartToString}`,
-          );
+          await this.telegramService.sendMessage(telegramMessage);
         } catch (error) {
           console.error('Error while sending telegram message', error);
         }

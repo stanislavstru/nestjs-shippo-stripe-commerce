@@ -7,6 +7,7 @@ const mainConfigKeysEnum = [
   'product_weight_secondary_unit',
   'product_dimensions_unit',
   'shipping_calculating_service',
+  'shipping_extra_price',
   'payment_service',
   'business_name',
   'business_company',
@@ -28,6 +29,7 @@ export type mainConfigKeysType =
   | 'product_weight_secondary_unit'
   | 'product_dimensions_unit'
   | 'shipping_calculating_service'
+  | 'shipping_extra_price'
   | 'payment_service'
   | 'business_name'
   | 'business_company'

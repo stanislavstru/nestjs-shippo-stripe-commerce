@@ -132,6 +132,29 @@ export class ShippoService {
         },
       });
 
+      // Apply extra price to each rate (from main_config shipping_extra_price)
+      const extraPriceRecord = await this.mainConfigService.findByKey(
+        'shipping_extra_price',
+      );
+      const extraPrice = Math.max(
+        0,
+        parseFloat(extraPriceRecord?.config_value ?? '0') || 0,
+      );
+
+      const ratesWithExtra =
+        extraPrice > 0 && shipment.rates?.length
+          ? shipment.rates.map((rate) => {
+              const baseAmount = parseFloat(rate.amount) || 0;
+              const newAmount = (baseAmount + extraPrice).toFixed(2);
+              return { ...rate, amount: newAmount };
+            })
+          : shipment.rates;
+
+      const shipmentWithExtra = {
+        ...shipment,
+        rates: ratesWithExtra,
+      };
+
       try {
         await this.telegramService.sendMessage(
           `New shipment calculation - country code: ${addressTo.country}, city: ${addressTo.city}.\n\nItems:\n<pre>${JSON.stringify(
@@ -147,9 +170,9 @@ export class ShippoService {
         console.error('Error while sending telegram message', error);
       }
 
-      console.log(shipment);
+      console.log(shipmentWithExtra);
 
-      return shipment;
+      return shipmentWithExtra;
     } catch (error) {
       throw new Error(`Error: ${error.message}`);
     }

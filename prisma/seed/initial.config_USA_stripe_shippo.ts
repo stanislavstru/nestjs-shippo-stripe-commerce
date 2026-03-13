@@ -26,6 +26,10 @@ const queries = [
     config_value: 'shippo',
   },
   {
+    config_key: 'shipping_extra_price',
+    config_value: '0',
+  },
+  {
     config_key: 'payment_service',
     config_value: 'stripe',
   },
