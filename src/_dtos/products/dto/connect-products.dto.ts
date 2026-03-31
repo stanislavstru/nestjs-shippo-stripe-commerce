@@ -12,5 +12,11 @@ export class ConnectProductsDto {
     required: false,
     nullable: true,
   })
+  meta_id?: string;
+  @ApiProperty({
+    type: 'string',
+    required: false,
+    nullable: true,
+  })
   slug?: string;
 }

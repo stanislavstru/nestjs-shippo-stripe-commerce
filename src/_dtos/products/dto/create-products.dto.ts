@@ -4,6 +4,12 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateProductsDto {
   @ApiProperty({
     type: 'string',
+    required: false,
+    nullable: true,
+  })
+  meta_id?: string | null;
+  @ApiProperty({
+    type: 'string',
   })
   slug: string;
   @ApiProperty({

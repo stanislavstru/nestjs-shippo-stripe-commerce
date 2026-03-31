@@ -109,8 +109,9 @@ model product_categories {
 }
 
 model products {
-  id   String @id @default(uuid())
-  slug String @unique
+  id      String  @id @default(uuid())
+  meta_id String? @unique
+  slug    String  @unique
 
   position Int
 

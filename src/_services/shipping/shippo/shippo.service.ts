@@ -132,10 +132,10 @@ export class ShippoService {
         },
       });
 
-      // Apply extra price to each rate (from main_config shipping_extra_price)
       const extraPriceRecord = await this.mainConfigService.findByKey(
         'shipping_extra_price',
       );
+      console.log('extraPriceRecord', extraPriceRecord);
       const extraPrice = Math.max(
         0,
         parseFloat(extraPriceRecord?.config_value ?? '0') || 0,
@@ -170,6 +170,7 @@ export class ShippoService {
         console.error('Error while sending telegram message', error);
       }
 
+      console.log('extraPriceRecord', extraPriceRecord);
       console.log(shipmentWithExtra);
 
       return shipmentWithExtra;

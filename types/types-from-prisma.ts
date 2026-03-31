@@ -68,6 +68,7 @@ export interface product_categories_model_type {
 
 export interface products_model_type {
   id: string;
+  meta_id: string | null;
   slug: string;
   position: number;
   images: string[];

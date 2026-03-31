@@ -354,7 +354,7 @@ export interface PaymentIntentResponseDto {
 
 export interface CreateOrdersDto {
   user_id: string;
-  payment_id: string;
+  payment_id?: string | null;
   order_status: string;
   /** @format double */
   order_amount_subtotal?: number | null;
@@ -405,7 +405,7 @@ export interface OrdersEntity {
   id: string;
   user_id: string;
   users?: UsersEntity;
-  payment_id: string;
+  payment_id: string | null;
   /** @format int32 */
   order_number: number;
   order_status: string;

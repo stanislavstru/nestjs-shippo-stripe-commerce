@@ -5,6 +5,12 @@ export class UpdateProductsDto {
   @ApiProperty({
     type: 'string',
     required: false,
+    nullable: true,
+  })
+  meta_id?: string | null;
+  @ApiProperty({
+    type: 'string',
+    required: false,
   })
   slug?: string;
   @ApiProperty({
